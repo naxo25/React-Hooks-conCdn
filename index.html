@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+	<title>Ej React Hooks solo con cdn</title>
+
+	<link rel="stylesheet" type="text/css" href="./card.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+	<!-- React core, dom, babel  -->
+    <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
+    <script src="https://nacholabraweb.000webhostapp.com/resources/naxJs.js"></script>
+
+</head>
+<body>
+
+	<div id="app"></div>
+	<script type="text/babel">
+		
+      const $app = document.getElementById("app");
+
+      const useState = React.useState;
+      const useEffect = React.useEffect;
+  	  const MyContext = React.createContext({ number: 5 });
+  	  const useContext = React.useContext;
+  	  const useReducer = React.useReducer;
+
+      const Hola = () => {
+      	const [enabled, updateEnabled] = useState(true);
+
+      	return(
+	      	<div>
+		  		<h3> { enabled ? 'Hola mundo con React' : '' } </h3>
+				<button onClick={() => { updateEnabled(!enabled) }} className='button'>
+					{ !enabled ? 'Mostrar Saludo' : 'Ocultar Saludo' }
+				</button>
+		  	</div>
+	  	)
+  	  }
+
+  	  const Links = ({ links }) => {
+  	  	if (!links) return ''
+  	  	return(
+  	  		<div style={{ marginTop: '20px' }}>
+  	  			{ 
+  	  				links.map((link,index) => 
+		            	<a href={link.link} target="blank" style={{ marginRight: '9px' }} key={index}>
+		            		<i className={link.name == 'Github' ? 'fa fa-github' : 'fa fa-external-link'}> 
+		            			<span style={{ marginLeft: "4px"}}>{link.name}</span>
+		            		</i>
+		            	</a>
+  	  				)
+  	  			}
+  	  		</div>
+  	  	)
+  	  }
+
+  	  const Contador = () => {
+  	  	const [contador, setContador] = useState(5)
+  	  	return(
+	  	  		<center style={{ padding: '20px' }}>
+	  	  			<h3> Contador con useState </h3>
+	  	  			<p>{ contador }</p>
+	  	  			<button onClick={() => setContador(contador + 1)}>
+	  	  				Incrementar
+	  	  			</button>
+	  	  			<button onClick={() => setContador(contador - 1)}>
+	  	  				Decrementar
+	  	  			</button>
+	  	  			<TimeContext />
+	  	  		</center>
+  	  	)
+  	  }
+
+  	  const Portafolio = () => {
+  	  	return(
+  	  		<div>
+	  	  		<center>
+	  	  			<h1> Portafolio </h1>
+	  	  			<span className='span'>
+  	  					(Plantilla hecha con react core, dom y babel)
+  	  				</span>
+  	  				<h2 className='span'>(Pasa el mouse por encima para ver descripción y links)</h2>
+	  	  		</center>
+
+  	  			<div className={'content'}>
+  	  			{
+  	  				portafolio.map((item, index) =>
+	  	  				<div className='container' key={index}>
+	  	  					<div className='card'>
+	  	  						<img src={ item.img ? item.img : 'https://www.cursosgis.com/wp-content/uploads/1-52.jpg' } alt=' Imagen no disponible' className='imgBx' />
+	  	  						<div className="contentBx">
+		    	    				<h2> { item.Titulo } </h2>
+		    	    				<div className="size">
+		    	    					<span> { item.parrafo } </span>
+		    	    					<Links links={item.links} />
+		    	    				</div>
+	  	  						</div>
+	  	  					</div>
+	  	  				</div>
+  	  				)
+  	  			}
+  	  			</div>
+	  	  	</div>
+  	  	)
+  	  }
+
+  	  function TimeContext() {
+  		const context = useContext(MyContext);
+
+		useEffect(() => {
+			const interval = setInterval(() => {
+			  context.getNumber(context.number + 1);
+			}, 1000);
+			return () => clearInterval(interval);
+		});
+
+  	  	return(
+		  	<div>
+  	  			<h3>Tiempo con useContext y useEffect </h3>
+  	  			Lleva { context.number } segundos.
+  	  		</div>
+  	  	)
+  	  }
+
+  	  function UserReducer(state, action) {
+		  const { payload, type } = action;
+
+		  switch (type) {
+		    case "Get_Number":
+		      return {
+		        ...state,
+		        number: payload
+		      };
+		    default:
+		      return state;
+		  }
+		};
+
+	  const UseContext = (props) => {
+		  const initialState = {
+		    number: 0
+		  };
+
+  		const [state, dispatch] = useReducer(UserReducer, initialState);
+
+		  const getNumber = async (numero) => {
+		    try {
+		      dispatch({ type: "Get_Number", payload: numero });
+		    } catch (error) {}
+		  };
+
+		  return (
+		    <MyContext.Provider
+		      value={{
+		        number: state.number,
+		        getNumber
+		      }}
+		    >
+		      {props.children}
+		    </MyContext.Provider>
+		  );
+	  }
+
+  	  function TimeOnline() {
+  	  	return(
+  	  		<div className='TimeOnline'>
+  	  			<TimeContext />
+  	  		</div>
+  	  	)
+  	  }
+
+	  ReactDOM.render(
+	  	<div>
+		  	<Portafolio />
+      		<UseContext>
+	  			<TimeOnline />
+  	  			<Contador />
+      		</UseContext>
+		  	<Hola />
+	  	</div>,
+	  	$app
+	  )      
+
+	</script>
+
+</body>
+</html>
