@@ -7,7 +7,7 @@ Plantilla hecha usando los hooks de react (context, effect, etc) con la cdn de r
 Clickea index.html
 
 ## Demo
-[https://nacholabraweb.000webhostapp.com/React/React.html](https://nacholabraweb.000webhostapp.com/React/React.html)
+[https://naxo25.github.io/React-Hooks-conCdn/](https://naxo25.github.io/React-Hooks-conCdn/)
 
 ## Construido con 🛠️
 

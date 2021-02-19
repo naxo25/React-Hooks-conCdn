@@ -3,7 +3,7 @@
   --translateContentBx: -195px;
 }
 
-h1, h3{
+h1{
   text-align: center;
 }
 .span {
@@ -14,12 +14,10 @@ h1, h3{
 }
 
 .button {
-  transform: translateX(-50%);
-  margin-left: 50%;
   padding: 8px;
   border-radius: 10px;
   box-shadow: 2px 2px 5px rgb(0,0,0, .5);
-  margin-bottom: 30px
+  margin-bottom: 60px
 }
 
 .TimeOnline 

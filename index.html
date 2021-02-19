@@ -34,13 +34,35 @@
       	const [enabled, updateEnabled] = useState(true);
 
       	return(
-	      	<div>
-		  		<h3> { enabled ? 'Hola mundo con React' : '' } </h3>
+	      	<center>
+		  		<h4> { enabled ? 'Hola mundo con React' : '' } </h4>
 				<button onClick={() => { updateEnabled(!enabled) }} className='button'>
 					{ !enabled ? 'Mostrar Saludo' : 'Ocultar Saludo' }
 				</button>
-		  	</div>
+		  	</center>
 	  	)
+  	  }
+
+  	  const Contador = () => {
+
+  	  	const [contador, setContador] = useState(5)
+  		const context = useContext(MyContext);
+
+  		context.editContador(contador) // paso contador como referencia
+
+  	  	return(
+  	  		<div style={{width: '32%', marginRight: '5px'}}>
+  	  			<h3> Contador con useState </h3>
+  	  			<p>{ contador }</p>
+  	  			<button onClick={() => { setContador(contador + 1) } }>
+  	  				Incrementar
+  	  			</button>
+  	  			<button onClick={() => { setContador(contador - 1) } }>
+  	  				Decrementar
+  	  			</button>
+  	  		</div>
+  	  	)
+
   	  }
 
   	  const Links = ({ links }) => {
@@ -56,25 +78,25 @@
 		            	</a>
   	  				)
   	  			}
-  	  		</div>
+		   	</div>
   	  	)
   	  }
 
-  	  const Contador = () => {
-  	  	const [contador, setContador] = useState(5)
-  	  	return(
-	  	  		<center style={{ padding: '20px' }}>
-	  	  			<h3> Contador con useState </h3>
-	  	  			<p>{ contador }</p>
-	  	  			<button onClick={() => setContador(contador + 1)}>
-	  	  				Incrementar
-	  	  			</button>
-	  	  			<button onClick={() => setContador(contador - 1)}>
-	  	  				Decrementar
-	  	  			</button>
-	  	  			<TimeContext />
-	  	  		</center>
-  	  	)
+  	  const Item = ({ img, Titulo, parrafo, links }) => {
+		return(
+			<div className='container'>
+				<div className='card'>
+					<img src={ img ? img : 'https://www.cursosgis.com/wp-content/uploads/1-52.jpg' } alt=' Imagen no disponible' className='imgBx' />
+					<div className="contentBx">
+						<h2> { Titulo } </h2>
+						<div className="size">
+							<span> { parrafo } </span>
+			    	    	<Links links={links} />
+						</div>
+					</div>
+				</div>
+			</div>
+		)
   	  }
 
   	  const Portafolio = () => {
@@ -82,27 +104,14 @@
   	  		<div>
 	  	  		<center>
 	  	  			<h1> Portafolio </h1>
-	  	  			<span className='span'>
-  	  					(Plantilla hecha con react core, dom y babel)
-  	  				</span>
-  	  				<h2 className='span'>(Pasa el mouse por encima para ver descripción y links)</h2>
+	  	  			<span className='span'> (Plantilla hecha con react core, dom y babel) </span>
+  	  				<h2 className='span'> (Pasa el mouse por encima para ver descripción y links) </h2>
 	  	  		</center>
 
   	  			<div className={'content'}>
   	  			{
   	  				portafolio.map((item, index) =>
-	  	  				<div className='container' key={index}>
-	  	  					<div className='card'>
-	  	  						<img src={ item.img ? item.img : 'https://www.cursosgis.com/wp-content/uploads/1-52.jpg' } alt=' Imagen no disponible' className='imgBx' />
-	  	  						<div className="contentBx">
-		    	    				<h2> { item.Titulo } </h2>
-		    	    				<div className="size">
-		    	    					<span> { item.parrafo } </span>
-		    	    					<Links links={item.links} />
-		    	    				</div>
-	  	  						</div>
-	  	  					</div>
-	  	  				</div>
+  	  					<Item key={index} {...item} />
   	  				)
   	  			}
   	  			</div>
@@ -110,18 +119,38 @@
   	  	)
   	  }
 
+  	  const ContadorContext = () => {
+  	  	return(
+  	  		<div style={{width: '32%', marginRight: '5px'}}>
+  	  			<h3> Contador con useContext </h3>
+  	  			<p> <ValorContadorContext /> </p>
+  	  		</div>
+  	  	)
+  	  }
+
+  	  const ValorContadorContext = () => {
+  		const context = useContext(MyContext);
+  	  	return (<span>{ context.contadorContext }</span>)
+  	  }
+
   	  function TimeContext() {
+
   		const context = useContext(MyContext);
 
 		useEffect(() => {
 			const interval = setInterval(() => {
-			  context.getNumber(context.number + 1);
+			  context.editNumber(context.number + 1);
 			}, 1000);
 			return () => clearInterval(interval);
-		});
+		}, [context.number]);
+
+		const interval = setInterval(() => {
+		  context.editNumber(context.number + 1);
+		}, 1000);
+		clearInterval(interval);
 
   	  	return(
-		  	<div>
+		  	<div style={{width: '32%', marginRight: '5px'}}>
   	  			<h3>Tiempo con useContext y useEffect </h3>
   	  			Lleva { context.number } segundos.
   	  		</div>
@@ -132,10 +161,15 @@
 		  const { payload, type } = action;
 
 		  switch (type) {
-		    case "Get_Number":
+		    case "Edit_Number":
 		      return {
 		        ...state,
 		        number: payload
+		      };
+		    case "Edit_Contador":
+		      return {
+		      	...state,
+		        contadorContext: payload
 		      };
 		    default:
 		      return state;
@@ -144,22 +178,30 @@
 
 	  const UseContext = (props) => {
 		  const initialState = {
-		    number: 0
+		    number: 0,
+		    contadorContext: 0,
 		  };
 
   		const [state, dispatch] = useReducer(UserReducer, initialState);
 
-		  const getNumber = async (numero) => {
+		  const editNumber = async (numero) => {
 		    try {
-		      dispatch({ type: "Get_Number", payload: numero });
+		      dispatch({ type: "Edit_Number", payload: numero });
 		    } catch (error) {}
 		  };
+		  const editContador = async(newContador) => {
+		  	try {
+		  		dispatch({ type: 'Edit_Contador', payload: newContador })
+		    } catch (err) {}
+		  }
 
 		  return (
 		    <MyContext.Provider
 		      value={{
 		        number: state.number,
-		        getNumber
+		        contadorContext: state.contadorContext,
+		        editNumber,
+		        editContador
 		      }}
 		    >
 		      {props.children}
@@ -168,9 +210,11 @@
 	  }
 
   	  function TimeOnline() {
+  		const context = useContext(MyContext);
   	  	return(
   	  		<div className='TimeOnline'>
-  	  			<TimeContext />
+  	  			<h3>Tiempo con useContext y useEffect </h3>
+  	  			Lleva { context.number } segundos.
   	  		</div>
   	  	)
   	  }
@@ -179,13 +223,17 @@
 	  	<div>
 		  	<Portafolio />
       		<UseContext>
-	  			<TimeOnline />
-  	  			<Contador />
+      			<TimeOnline />
+      			<div style={{ display: 'flex', flexWrap: 'wrap', textAlign: 'center', justifyContent: 'space-between' }}>
+  	  				<TimeContext />
+	  	  			<Contador />
+	  	  			<ContadorContext />
+	  	  		</div>
       		</UseContext>
 		  	<Hola />
 	  	</div>,
 	  	$app
-	  )      
+	  )
 
 	</script>
 
