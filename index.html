@@ -4,238 +4,104 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-	<title>Ej React Hooks solo con cdn</title>
+    <title>Ej React Hooks solo con cdn</title>
 
-	<link rel="stylesheet" type="text/css" href="./card.css">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://nacholabraweb.000webhostapp.com/css2/custom-bs.css">
+    <link rel="stylesheet" href="https://nacholabraweb.000webhostapp.com/css2/style.css">
 
-	<!-- React core, dom, babel  -->
+    <!-- React core, dom, babel  -->
     <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
     <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
-
     <script src="https://nacholabraweb.000webhostapp.com/resources/naxJs.js"></script>
 
 </head>
+
 <body>
 
-	<div id="app"></div>
-	<script type="text/babel">
-		
+  <div id="app"></div>
+  <script type="text/babel">
+
       const $app = document.getElementById("app");
 
       const useState = React.useState;
       const useEffect = React.useEffect;
-  	  const MyContext = React.createContext({ number: 5 });
-  	  const useContext = React.useContext;
-  	  const useReducer = React.useReducer;
+      const MyContext = React.createContext({ number: 5 });
+      const useContext = React.useContext;
+      const useReducer = React.useReducer;
 
-      const Hola = () => {
-      	const [enabled, updateEnabled] = useState(true);
+      const Links = ({ links }) => {
+        if (!links) return ''
+        return(
+          <div style={{ marginTop: '20px' }}>
+            {
+              links.map((link,index) =>
+                  <a href={ link.link } target="_blank" style={{ marginRight: '9px', textDecoration: 'none' }} key={index}>
+                    <span className={ link.name == 'Github' ? 'fa fa-github' : 'fa fa-external-link' }>
+                      <b style={{ marginLeft: "4px" }}>{link.name}</b>
+                    </span>
+                  </a>
+              )
+            }
+        </div>
+        )
+      }
 
-      	return(
-	      	<center>
-		  		<h4> { enabled ? 'Hola mundo con React' : '' } </h4>
-				<button onClick={() => { updateEnabled(!enabled) }} className='button'>
-					{ !enabled ? 'Mostrar Saludo' : 'Ocultar Saludo' }
-				</button>
-		  	</center>
-	  	)
-  	  }
+      const Item = ({ img, Titulo, parrafo, links }) => {
+        return(
+            <div className="col-12 col-md-4 col-lg-4">
+              <div className="block__16443 text-center d-block">
+                  <img className="img-fluid mx-auto d-block" src={img || 'https://www.cursosgis.com/wp-content/uploads/1-52.jpg'} alt="card image" style={{ margin: 'auto', width: '140px', height: '150px', borderRadius: '25%', marginBottom: '30px' }} />
+                  <h3> { Titulo } </h3>
+                  <p> { parrafo } <Links links={links} /></p>
+              </div>
+            </div>
+        )
+      }
 
-  	  const Contador = () => {
+      const Portafolio = () => {
+        return(
+        <section className="site-section services-section bg-white block__62849" style={{ marginTop: '0'}} id="Desarrollo">
+          <div className="container">
 
-  	  	const [contador, setContador] = useState(5)
-  		const context = useContext(MyContext);
+            <div className="row mb-5">
+              <div className="col-12 text-center" data-aos="fade">
+                <h3 className="section-title-sub text-primary"><b>Demos</b></h3>
+                <h2 className="section-title mb-3">Portafolio</h2>
+                <span className="section-title-sub text-primary"> (Plantilla hecha con react core, dom y babel) </span>
+                <h2 className="section-title-sub text-black"> (Pasa el mouse por encima para ver descripción y links) </h2>
+              </div>
+            </div>
 
-  		context.editContador(contador) // paso contador como referencia
+            <div className="row">
 
-  	  	return(
-  	  		<div style={{width: '32%', marginRight: '5px'}}>
-  	  			<h3> Contador con useState </h3>
-  	  			<p>{ contador }</p>
-  	  			<button onClick={() => { setContador(contador + 1) } }>
-  	  				Incrementar
-  	  			</button>
-  	  			<button onClick={() => { setContador(contador - 1) } }>
-  	  				Decrementar
-  	  			</button>
-  	  		</div>
-  	  	)
+                {
+                  portafolio.map((item, index) =>
+                    <Item key={index} {...item} />
+                  )
+                }
 
-  	  }
+            </div>
 
-  	  const Links = ({ links }) => {
-  	  	if (!links) return ''
-  	  	return(
-  	  		<div style={{ marginTop: '20px' }}>
-  	  			{ 
-  	  				links.map((link,index) => 
-		            	<a href={link.link} target="blank" style={{ marginRight: '9px' }} key={index}>
-		            		<i className={link.name == 'Github' ? 'fa fa-github' : 'fa fa-external-link'}> 
-		            			<span style={{ marginLeft: "4px"}}>{link.name}</span>
-		            		</i>
-		            	</a>
-  	  				)
-  	  			}
-		   	</div>
-  	  	)
-  	  }
+            <div className="row">
+              <div className="col-12 text-center">
+                <a href="https://github.com/naxo25" className="btn btn-primary btn-md" target='_blank'>Ver GitHub </a>
+              </div>
+            </div>
 
-  	  const Item = ({ img, Titulo, parrafo, links }) => {
-		return(
-			<div className='container'>
-				<div className='card'>
-					<img src={ img ? img : 'https://www.cursosgis.com/wp-content/uploads/1-52.jpg' } alt=' Imagen no disponible' className='imgBx' />
-					<div className="contentBx">
-						<h2> { Titulo } </h2>
-						<div className="size">
-							<span> { parrafo } </span>
-			    	    	<Links links={links} />
-						</div>
-					</div>
-				</div>
-			</div>
-		)
-  	  }
+          </div>
+        </section>
+        )
+      }
 
-  	  const Portafolio = () => {
-  	  	return(
-  	  		<div>
-	  	  		<center>
-	  	  			<h1> Portafolio </h1>
-	  	  			<span className='span'> (Plantilla hecha con react core, dom y babel) </span>
-  	  				<h2 className='span'> (Pasa el mouse por encima para ver descripción y links) </h2>
-	  	  		</center>
+      ReactDOM.render(
+        <div>
+          <Portafolio />
+        </div>,
+        $app
+      )
 
-  	  			<div className={'content'}>
-  	  			{
-  	  				portafolio.map((item, index) =>
-  	  					<Item key={index} {...item} />
-  	  				)
-  	  			}
-  	  			</div>
-	  	  	</div>
-  	  	)
-  	  }
-
-  	  const ContadorContext = () => {
-  	  	return(
-  	  		<div style={{width: '32%', marginRight: '5px'}}>
-  	  			<h3> Contador con useContext </h3>
-  	  			<p> <ValorContadorContext /> </p>
-  	  		</div>
-  	  	)
-  	  }
-
-  	  const ValorContadorContext = () => {
-  		const context = useContext(MyContext);
-  	  	return (<span>{ context.contadorContext }</span>)
-  	  }
-
-  	  function TimeContext() {
-
-  		const context = useContext(MyContext);
-
-		useEffect(() => {
-			const interval = setInterval(() => {
-			  context.editNumber(context.number + 1);
-			}, 1000);
-			return () => clearInterval(interval);
-		}, [context.number]);
-
-		const interval = setInterval(() => {
-		  context.editNumber(context.number + 1);
-		}, 1000);
-		clearInterval(interval);
-
-  	  	return(
-		  	<div style={{width: '32%', marginRight: '5px'}}>
-  	  			<h3>Tiempo con useContext y useEffect </h3>
-  	  			Lleva { context.number } segundos.
-  	  		</div>
-  	  	)
-  	  }
-
-  	  function UserReducer(state, action) {
-		  const { payload, type } = action;
-
-		  switch (type) {
-		    case "Edit_Number":
-		      return {
-		        ...state,
-		        number: payload
-		      };
-		    case "Edit_Contador":
-		      return {
-		      	...state,
-		        contadorContext: payload
-		      };
-		    default:
-		      return state;
-		  }
-		};
-
-	  const UseContext = (props) => {
-		  const initialState = {
-		    number: 0,
-		    contadorContext: 0,
-		  };
-
-  		const [state, dispatch] = useReducer(UserReducer, initialState);
-
-		  const editNumber = async (numero) => {
-		    try {
-		      dispatch({ type: "Edit_Number", payload: numero });
-		    } catch (error) {}
-		  };
-		  const editContador = async(newContador) => {
-		  	try {
-		  		dispatch({ type: 'Edit_Contador', payload: newContador })
-		    } catch (err) {}
-		  }
-
-		  return (
-		    <MyContext.Provider
-		      value={{
-		        number: state.number,
-		        contadorContext: state.contadorContext,
-		        editNumber,
-		        editContador
-		      }}
-		    >
-		      {props.children}
-		    </MyContext.Provider>
-		  );
-	  }
-
-  	  function TimeOnline() {
-  		const context = useContext(MyContext);
-  	  	return(
-  	  		<div className='TimeOnline'>
-  	  			<h3>Tiempo con useContext y useEffect </h3>
-  	  			Lleva { context.number } segundos.
-  	  		</div>
-  	  	)
-  	  }
-
-	  ReactDOM.render(
-	  	<div>
-		  	<Portafolio />
-      		<UseContext>
-      			<TimeOnline />
-      			<div style={{ display: 'flex', flexWrap: 'wrap', textAlign: 'center', justifyContent: 'space-between' }}>
-  	  				<TimeContext />
-	  	  			<Contador />
-	  	  			<ContadorContext />
-	  	  		</div>
-      		</UseContext>
-		  	<Hola />
-	  	</div>,
-	  	$app
-	  )
-
-	</script>
+  </script>
 
 </body>
 </html>
